@@ -1,4 +1,7 @@
 package com.example.weatheria.model
 
-class Wind {
-}
+data class Wind(
+    val speed: Float,
+    val deg: Int,
+    val gust: Float
+)

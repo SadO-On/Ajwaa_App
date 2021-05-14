@@ -1,4 +1,5 @@
 package com.example.weatheria.model
 
-class Clouds {
-}
+data class Clouds(
+    val all : Int
+)

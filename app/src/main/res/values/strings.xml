@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Weatheria</string>
+    <string name="setting">Settings</string>
+    <string name="sun_content_description">sun</string>
 </resources>

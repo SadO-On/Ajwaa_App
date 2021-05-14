@@ -1,4 +1,6 @@
 package com.example.weatheria.model
 
-class Coord {
-}
+data class Coord (
+    val lat: Float,
+    val lon: Float
+        )

@@ -1,4 +1,5 @@
 package com.example.weatheria.model
 
-class Sys {
-}
+data class Sys (
+    val pod: String
+        )
