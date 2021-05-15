@@ -12,7 +12,35 @@
         android:id="@+id/main_screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bb">
+       >
+
+        <ImageView
+            android:id="@+id/b"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.75"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintWidth_percent="1.25" />
+
+        <ImageView
+            android:id="@+id/line"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            android:src="@drawable/line"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.1"
+            app:layout_constraintHorizontal_bias="0.36"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/city_text"
+            app:layout_constraintVertical_bias="0.00999999"
+            app:layout_constraintWidth_percent="1" />
 
         <TextView
             android:id="@+id/weather_description"
@@ -64,13 +92,48 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/cairo_extralight"
             android:text="@{viewModel.weatherData.city.name}"
-            android:textColor="@color/white"
+            android:textColor="@color/night_color"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/weather_description"
-            app:layout_constraintVertical_bias="0.19999999"
+            app:layout_constraintVertical_bias="0.6"
             tools:text="Jeddah" />
+
+        <TextView
+            android:id="@+id/now_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/cairo_extralight"
+            android:text="@{viewModel.weatherData.city.name}"
+
+            android:textColor="@color/night_color"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line"
+            app:layout_constraintVertical_bias="0.16000003"
+            tools:text="Now" />
+
+        <TextView
+            android:id="@+id/step_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/cairo_extralight"
+            android:text="@{viewModel.weatherData.city.name}"
+            android:textColor="@color/night_color"
+            android:textSize="18sp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/now_temp"
+            app:layout_constraintTop_toBottomOf="@+id/line"
+            tools:text="1AM" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
