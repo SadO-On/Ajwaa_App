@@ -8,8 +8,10 @@ import com.example.weatheria.model.WeatherResponse
 import com.example.weatheria.repository.WeatherRepository
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.util.*
 
 class WeatherViewModel : ViewModel(){
+
 
     private val TAG ="WeatherViewModel"
 
@@ -19,6 +21,11 @@ class WeatherViewModel : ViewModel(){
 
     val weatherData : LiveData<WeatherResponse>
      get() = _weatherData
+
+    private val _time = MutableLiveData<Int>()
+
+    val time : LiveData<Int>
+        get() = _time
 
     fun getWeatherData(location : Location){
         viewModelScope.launch {
@@ -30,6 +37,10 @@ class WeatherViewModel : ViewModel(){
                 Log.e(TAG , e.message.toString())
             }
         }
+    }
+     fun getTime() {
+        val instance = Calendar.getInstance()
+        _time.value = instance.get(Calendar.HOUR_OF_DAY)
     }
 
 }

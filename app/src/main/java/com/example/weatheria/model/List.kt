@@ -14,4 +14,10 @@ data class List(
     val sys: Sys,
     @Json(name = "dt_txt")
     val dtTxt: String
-)
+){
+    fun toFormattedTime():String{
+        val sdf = java.text.SimpleDateFormat("ha")
+        val date = java.util.Date(dt.toLong() * 1000)
+        return sdf.format(date)
+    }
+}

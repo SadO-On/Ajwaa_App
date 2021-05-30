@@ -11,14 +11,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_screen"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-       >
+        android:fitsSystemWindows="true"
+
+        android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/b"
+            android:id="@+id/background"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/background"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.75"
@@ -33,12 +35,11 @@
             android:layout_height="5dp"
             android:src="@drawable/line"
             app:layout_constraintBottom_toBottomOf="parent"
-
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.1"
             app:layout_constraintHorizontal_bias="0.36"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/city_text"
+            app:layout_constraintTop_toBottomOf="@+id/city_name"
             app:layout_constraintVertical_bias="0.00999999"
             app:layout_constraintWidth_percent="1" />
 
@@ -70,7 +71,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/weather_description"
             app:layout_constraintVertical_bias="0.0"
-            app:tempAdapter="@{viewModel.weatherData.list}"
+            app:tempAdapter="@{viewModel.weatherData.list.get(0).main.temp}"
             tools:text="37°" />
 
         <ImageView
@@ -87,37 +88,36 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/city_text"
+            android:id="@+id/city_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/cairo_extralight"
             android:text="@{viewModel.weatherData.city.name}"
             android:textColor="@color/night_color"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/weather_description"
-            app:layout_constraintVertical_bias="0.6"
+            app:layout_constraintVertical_bias="0.65"
             tools:text="Jeddah" />
 
+
         <TextView
-            android:id="@+id/now_temp"
+            android:id="@+id/now_temp_string"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/cairo_extralight"
-            android:text="@{viewModel.weatherData.city.name}"
-
+            android:text="@string/now"
             android:textColor="@color/night_color"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/step_one"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/line"
-            app:layout_constraintVertical_bias="0.16000003"
-            tools:text="Now" />
+            app:layout_constraintTop_toBottomOf="@+id/line" />
 
         <TextView
             android:id="@+id/step_one"
@@ -125,15 +125,143 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/cairo_extralight"
-            android:text="@{viewModel.weatherData.city.name}"
+            android:textColor="@color/night_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/step_two"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toEndOf="@+id/now_temp_string"
+            app:layout_constraintTop_toBottomOf="@+id/line"
+            app:timeAdapter="@{viewModel.weatherData.list.get(1).toFormattedTime()}"
+            tools:text="1AM" />
+
+        <TextView
+            android:id="@+id/step_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/cairo_extralight"
+            android:textColor="@color/night_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/step_three"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/step_one"
+            app:layout_constraintTop_toBottomOf="@+id/line"
+            app:timeAdapter="@{viewModel.weatherData.list.get(2).toFormattedTime()}"
+            tools:text="2AM" />
+
+        <TextView
+            android:id="@+id/step_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/cairo_extralight"
+            android:textColor="@color/night_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/step_two"
+            app:layout_constraintTop_toBottomOf="@+id/line"
+            app:timeAdapter="@{viewModel.weatherData.list.get(3).toFormattedTime()}"
+            tools:text="3AM" />
+
+        <TextView
+            android:id="@+id/temp_now"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cairo_extralight"
             android:textColor="@color/night_color"
             android:textSize="18sp"
 
+            app:layout_constraintBaseline_toBaselineOf="@+id/step_one_temp"
+            app:layout_constraintEnd_toStartOf="@+id/step_one_temp"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tempAdapter="@{viewModel.weatherData.list.get(0).main.temp}"
+            tools:text="35" />
+
+        <TextView
+            android:id="@+id/step_one_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cairo_extralight"
+            android:textColor="@color/night_color"
+            android:textSize="18sp"
+
+            app:layout_constraintBaseline_toBaselineOf="@+id/step_two_temp"
+            app:layout_constraintEnd_toStartOf="@+id/step_two_temp"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/temp_now"
+            app:tempAdapter="@{viewModel.weatherData.list.get(1).main.temp}"
+            tools:text="22
+" />
+
+        <TextView
+            android:id="@+id/step_two_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/cairo_extralight"
+            android:textColor="@color/night_color"
+
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/step_three_temp"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/step_one_temp"
+            app:layout_constraintTop_toBottomOf="@+id/step_two"
+            app:tempAdapter="@{viewModel.weatherData.list.get(2).main.temp}"
+            tools:text="12" />
+
+        <TextView
+            android:id="@+id/step_three_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cairo_extralight"
+            android:textColor="@color/night_color"
+
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/step_two_temp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/step_two_temp"
+            app:tempAdapter="@{viewModel.weatherData.list.get(3).main.temp}"
+            tools:text="4" />
+
+        <TextView
+            android:id="@+id/days_changer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cairo_extralight"
+            android:textColor="@color/night_color"
+            android:textSize="24sp"
+            android:text="@string/days"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/now_temp"
-            app:layout_constraintTop_toBottomOf="@+id/line"
-            tools:text="1AM" />
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <ImageView
+            android:id="@+id/previous"
+            android:layout_width="32dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/sun_content_description"
+            android:src="@drawable/previous"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/sun_content_description"
+            android:src="@drawable/next"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -2,4 +2,8 @@
     <string name="app_name">Weatheria</string>
     <string name="setting">Settings</string>
     <string name="sun_content_description">sun</string>
+    <string name="now">Now</string>
+    <string name="one_am">1AM</string>
+    <string name="two_am">2AM</string>
+    <string name="days">Days</string>
 </resources>
