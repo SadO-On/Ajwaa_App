@@ -111,22 +111,31 @@ class WeatherFragment : Fragment() {
     private fun requestNewLocationData() {
         Log.i(TAG , "Entered requestNewLocationData")
         var locationRequest = LocationRequest.create().apply {
-            maxWaitTime = 100
+            interval = 4000
+            fastestInterval = 2000
+            numUpdates = 1
+            priority= LocationRequest.PRIORITY_HIGH_ACCURACY
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         fusedLocationClient.requestLocationUpdates(
             locationRequest,
             locationCallback,
-            Looper.getMainLooper()
+            Looper.myLooper()
         )
 
     }
 
     private val locationCallback = object : LocationCallback() {
+
         override fun onLocationResult(p0: LocationResult) {
             Log.i(TAG , "new Location value is : " + p0.lastLocation.toString())
             var lastLocation = p0.lastLocation
             weatherViewModel.getWeatherData(lastLocation)
+        }
+
+        override fun onLocationAvailability(p0: LocationAvailability) {
+            super.onLocationAvailability(p0)
+            Log.e(TAG , "Is Location Available"+p0.isLocationAvailable)
         }
     }
 
