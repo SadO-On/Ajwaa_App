@@ -11,4 +11,5 @@
     <color name="afternoon_color">#F0BE0E</color>
     <color name="heading_morning_color">#BFBBBB</color>
     <color name="morning_color">#5EBDE5</color>
+    <color name="semi_transparent">#80D8D8D8</color>
 </resources>

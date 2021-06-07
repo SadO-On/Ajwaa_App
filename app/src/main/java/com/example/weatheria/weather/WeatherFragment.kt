@@ -3,32 +3,37 @@ package com.example.weatheria.weather
 import android.os.Bundle
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.location.LocationManager
 import android.net.Uri
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatheria.BuildConfig
 import com.example.weatheria.R
 import com.example.weatheria.databinding.WeatherFragmentBinding
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class WeatherFragment : Fragment() {
 
-    private lateinit var fusedLocationClient : FusedLocationProviderClient
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private lateinit var weatherViewModel : WeatherViewModel
+    private lateinit var weatherViewModel: WeatherViewModel
 
-    private lateinit var binding :WeatherFragmentBinding
+    private lateinit var binding: WeatherFragmentBinding
     private val TAG = "WeatherFragment"
 
     override fun onCreateView(
@@ -36,51 +41,98 @@ class WeatherFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-         binding = WeatherFragmentBinding.inflate(inflater)
+        binding = WeatherFragmentBinding.inflate(inflater)
         binding.lifecycleOwner = this
         weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
         weatherViewModel.getTime()
         binding.viewModel = weatherViewModel
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         requestPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        fusedLocationClient= LocationServices.getFusedLocationProviderClient(requireActivity())
         changeBackground()
-        return  binding.root
+        return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        requestNewLocationData()
     }
 
 
-
-    private val requestPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()){
-            isGranted ->
-        if(isGranted){
-            getLocation()
-            Log.i(TAG , "Entered")
-        }else{
-            Snackbar
-                .make(requireActivity().findViewById(android.R.id.content),
-                    "You should allow Location permission to get Weather based on your Location",
-                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.setting){
-                    startActivity(Intent().apply {
-                        action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                        data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    })
-                }.show()
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun getLocation(){
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null){
-                weatherViewModel.getWeatherData(location)
+    private val requestPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                getLocation()
+                Log.i(TAG, "Entered")
+            } else {
+                Snackbar
+                    .make(
+                        requireActivity().findViewById(android.R.id.content),
+                        "You should allow Location permission to get Weather based on your Location",
+                        Snackbar.LENGTH_INDEFINITE
+                    ).setAction(R.string.setting) {
+                        startActivity(Intent().apply {
+                            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        })
+                    }.show()
             }
         }
+
+    @SuppressLint("MissingPermission")
+    private fun getLocation() {
+        if (isLocationEnabled()) {
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location == null) {
+                    Log.e(TAG, " Null value: not entered")
+                    requestNewLocationData()
+                } else {
+                    Log.i(TAG, location.toString())
+                    weatherViewModel.getWeatherData(location)
+                }
+            }
+        } else {
+            Toast.makeText(requireContext(), "Turn on the Location", Toast.LENGTH_LONG).show()
+            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+            requireActivity().startActivity(intent)
+        }
+    }
+
+    private fun isLocationEnabled(): Boolean {
+        var locationManager: LocationManager =
+            requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
     }
 
 
+    @SuppressLint("MissingPermission")
+    private fun requestNewLocationData() {
+        Log.i(TAG , "Entered requestNewLocationData")
+        var locationRequest = LocationRequest.create().apply {
+            maxWaitTime = 100
+        }
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.getMainLooper()
+        )
 
-    private fun changeBackground(){
-        Log.i(TAG , weatherViewModel.time.value.toString())
+    }
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(p0: LocationResult) {
+            Log.i(TAG , "new Location value is : " + p0.lastLocation.toString())
+            var lastLocation = p0.lastLocation
+            weatherViewModel.getWeatherData(lastLocation)
+        }
+    }
+
+
+    private fun changeBackground() {
+        Log.i(TAG, weatherViewModel.time.value.toString())
         when {
             weatherViewModel.time.value!! in 13..17 -> {
                 binding.background.setImageResource(R.drawable.afternoon_background)
@@ -95,26 +147,36 @@ class WeatherFragment : Fragment() {
             else -> {
                 binding.background.setImageResource(R.drawable.day)
                 binding.sun.setImageResource(R.drawable.sun)
-                binding.temperature.setTextColor(ContextCompat.getColor(requireContext(),R.color.heading_morning_color))
-                binding.weatherDescription.setTextColor(ContextCompat.getColor(requireContext(),R.color.heading_morning_color))
+                binding.temperature.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.heading_morning_color
+                    )
+                )
+                binding.weatherDescription.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.heading_morning_color
+                    )
+                )
                 commonColorChanger(R.color.morning_color)
             }
         }
     }
 
     private fun commonColorChanger(color: Int) {
-        binding.line.setColorFilter(ContextCompat.getColor(requireContext(),color))
-        binding.cityName.setTextColor(ContextCompat.getColor(requireContext(),color))
-        binding.nowTempString.setTextColor(ContextCompat.getColor(requireContext(),color))
-        binding.stepOne.setTextColor(ContextCompat.getColor(requireContext(),color))
-        binding.stepTwo.setTextColor(ContextCompat.getColor(requireContext(),color))
-        binding.stepThree.setTextColor(ContextCompat.getColor(requireContext(),color))
-        binding.tempNow.setTextColor(ContextCompat.getColor(requireContext(),color))
-        binding.stepOneTemp.setTextColor(ContextCompat.getColor(requireContext(),color))
-        binding.stepTwoTemp.setTextColor(ContextCompat.getColor(requireContext(),color))
-        binding.stepThreeTemp.setTextColor(ContextCompat.getColor(requireContext(),color))
-        binding.daysChanger.setTextColor(ContextCompat.getColor(requireContext(),color))
-        binding.previous.setColorFilter(ContextCompat.getColor(requireContext(),color))
-        binding.next.setColorFilter(ContextCompat.getColor(requireContext(),color))
+        binding.line.setColorFilter(ContextCompat.getColor(requireContext(), color))
+        binding.cityName.setTextColor(ContextCompat.getColor(requireContext(), color))
+        binding.nowTempString.setTextColor(ContextCompat.getColor(requireContext(), color))
+        binding.stepOne.setTextColor(ContextCompat.getColor(requireContext(), color))
+        binding.stepTwo.setTextColor(ContextCompat.getColor(requireContext(), color))
+        binding.stepThree.setTextColor(ContextCompat.getColor(requireContext(), color))
+        binding.tempNow.setTextColor(ContextCompat.getColor(requireContext(), color))
+        binding.stepOneTemp.setTextColor(ContextCompat.getColor(requireContext(), color))
+        binding.stepTwoTemp.setTextColor(ContextCompat.getColor(requireContext(), color))
+        binding.stepThreeTemp.setTextColor(ContextCompat.getColor(requireContext(), color))
+        binding.daysChanger.setTextColor(ContextCompat.getColor(requireContext(), color))
+        binding.previous.setColorFilter(ContextCompat.getColor(requireContext(), color))
+        binding.next.setColorFilter(ContextCompat.getColor(requireContext(), color))
     }
 }
