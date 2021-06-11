@@ -89,6 +89,7 @@ class WeatherFragment : Fragment() {
                 } else {
                     Log.i(TAG, location.toString())
                     weatherViewModel.getWeatherData(location)
+                    weatherViewModel.getCurrentWeatherData(location)
                 }
             }
         } else {
@@ -131,6 +132,7 @@ class WeatherFragment : Fragment() {
             Log.i(TAG , "new Location value is : " + p0.lastLocation.toString())
             var lastLocation = p0.lastLocation
             weatherViewModel.getWeatherData(lastLocation)
+            weatherViewModel.getCurrentWeatherData(lastLocation)
         }
 
         override fun onLocationAvailability(p0: LocationAvailability) {

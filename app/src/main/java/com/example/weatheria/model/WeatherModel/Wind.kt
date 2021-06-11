@@ -1,4 +1,4 @@
-package com.example.weatheria.model
+package com.example.weatheria.model.WeatherModel
 
 data class Wind(
     val speed: Float,

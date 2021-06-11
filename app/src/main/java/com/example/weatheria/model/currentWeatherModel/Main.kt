@@ -1,4 +1,4 @@
-package com.example.weatheria.model
+package com.example.weatheria.model.currentWeatherModel
 
 import com.squareup.moshi.Json
 
@@ -11,13 +11,5 @@ data class Main(
     @Json(name = "temp_max")
     val tempMax: Float,
     val pressure: Int,
-    @Json(name = "sea_level")
-    val seaLevel: Int,
-    @Json(name = "grnd_level")
-    val grandLevel: Int,
     val humidity: Int,
-    @Json(name = "temp_kf")
-    val tempKf: Float
-){
-
-}
+)

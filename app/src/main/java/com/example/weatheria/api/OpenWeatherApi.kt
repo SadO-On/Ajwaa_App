@@ -1,6 +1,7 @@
 package com.example.weatheria.api
 
-import com.example.weatheria.model.WeatherResponse
+import com.example.weatheria.model.WeatherModel.WeatherResponse
+import com.example.weatheria.model.currentWeatherModel.CurrentWeatherResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Response
@@ -20,6 +21,14 @@ interface OpenWeatherApi {
         @Query("appid") apiKey: String,
         @Query("units") type : String
     ): Response<WeatherResponse>
+
+   @GET("data/2.5/weather")
+   suspend fun getCurrentWeatherData(
+       @Query("lat") lat: Double,
+       @Query("lon") lon: Double,
+       @Query("appid") apiKey: String,
+       @Query("units") type : String
+   ) : Response<CurrentWeatherResponse>
 }
 
 private val moshi = Moshi.Builder()

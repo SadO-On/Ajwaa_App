@@ -14,7 +14,7 @@ fun bindTemp(textView: TextView , temperature : Float?){
     }
 }
 @BindingAdapter("weatherAdapter")
-fun bindWeather(textView: TextView , list: List<com.example.weatheria.model.List>?){
+fun bindWeather(textView: TextView , list: List<com.example.weatheria.model.WeatherModel.List>?){
     if(!list.isNullOrEmpty()){
         textView.text = list?.get(0)?.weather.get(0).main
     }else {

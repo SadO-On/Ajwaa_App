@@ -1,4 +1,4 @@
-package com.example.weatheria.model
+package com.example.weatheria.model.WeatherModel
 
 import com.squareup.moshi.Json
 import kotlin.collections.List
