@@ -37,6 +37,7 @@ class WeatherViewModel : ViewModel(){
         viewModelScope.launch {
             try{
                 _weatherData.value = repository.getWeather(location.latitude,location.longitude , BuildConfig.openWeatherApiKey).body()
+                Log.i(TAG , "Historical ----" + _weatherData.value)
             }catch (e:Exception){
                 Log.e(TAG , e.message.toString())
             }

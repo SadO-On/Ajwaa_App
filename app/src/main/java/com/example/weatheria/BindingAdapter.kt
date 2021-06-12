@@ -2,6 +2,7 @@ package com.example.weatheria
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.example.weatheria.model.WeatherModel.Weather
 
 @BindingAdapter("tempAdapter")
 fun bindTemp(textView: TextView , temperature : Float?){
@@ -14,11 +15,11 @@ fun bindTemp(textView: TextView , temperature : Float?){
     }
 }
 @BindingAdapter("weatherAdapter")
-fun bindWeather(textView: TextView , list: List<com.example.weatheria.model.WeatherModel.List>?){
+fun bindWeather(textView: TextView , list: List<Weather>?){
     if(!list.isNullOrEmpty()){
-        textView.text = list?.get(0)?.weather.get(0).main
+        textView.text = list?.get(0)?.main
     }else {
-        textView.text = "--°"
+        textView.text = "--"
     }
 }
 @BindingAdapter("timeAdapter")

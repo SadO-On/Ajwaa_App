@@ -55,7 +55,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.056"
-            app:weatherAdapter="@{viewModel.weatherData.list}"
+            app:weatherAdapter="@{viewModel.currentWeatherData.weather}"
             tools:text="Clear" />
 
         <TextView
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/cairo_extralight"
-            android:text="@{viewModel.weatherData.city.name}"
+            android:text="@{viewModel.currentWeatherData.name}"
             android:textColor="@color/night_color"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -110,13 +110,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/cairo_extralight"
-            android:text="@string/now"
             android:textColor="@color/night_color"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/step_one"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/line" />
+            app:layout_constraintTop_toBottomOf="@+id/line"
+            app:timeAdapter="@{viewModel.weatherData.list.get(0).toFormattedTime()}"
+            tools:text="11PM"
+            />
 
         <TextView
             android:id="@+id/step_one"
