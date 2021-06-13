@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import kotlin.collections.List
 
 data class List(
-    val dt: Int,
+    val dt: Long,
     val main: Main,
     val weather: List<Weather>,
     val clouds: Clouds,
@@ -17,7 +17,7 @@ data class List(
 ){
     fun toFormattedTime():String{
         val sdf = java.text.SimpleDateFormat("ha")
-        val date = java.util.Date(dt.toLong() * 1000)
+        val date = java.util.Date(dt * 1000)
         return sdf.format(date)
     }
 }

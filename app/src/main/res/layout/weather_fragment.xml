@@ -55,7 +55,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.056"
-            app:weatherAdapter="@{viewModel.currentWeatherData.weather}"
+            app:weatherAdapter="@{viewModel.mainWeatherStatus}"
             tools:text="Clear" />
 
         <TextView
@@ -70,7 +70,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/weather_description"
             app:layout_constraintVertical_bias="0.0"
-            app:tempAdapter="@{viewModel.currentWeatherData.main.temp}"
+            app:tempAdapter="@{viewModel.mainTemperature}"
             tools:text="37°" />
 
         <ImageView
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/cairo_extralight"
-            android:text="@{viewModel.currentWeatherData.name}"
+            android:text="@{viewModel.cityName}"
             android:textColor="@color/night_color"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -116,7 +116,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/line"
-            app:timeAdapter="@{viewModel.weatherData.list.get(0).toFormattedTime()}"
+            app:timeAdapter="@{viewModel.firstTimeElement}"
             tools:text="11PM"
             />
 
@@ -133,7 +133,7 @@
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toEndOf="@+id/now_temp_string"
             app:layout_constraintTop_toBottomOf="@+id/line"
-            app:timeAdapter="@{viewModel.weatherData.list.get(1).toFormattedTime()}"
+            app:timeAdapter="@{viewModel.secondTimeElement}"
             tools:text="1AM" />
 
         <TextView
@@ -148,7 +148,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/step_one"
             app:layout_constraintTop_toBottomOf="@+id/line"
-            app:timeAdapter="@{viewModel.weatherData.list.get(2).toFormattedTime()}"
+            app:timeAdapter="@{viewModel.thirdTimeElement}"
             tools:text="2AM" />
 
         <TextView
@@ -163,7 +163,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/step_two"
             app:layout_constraintTop_toBottomOf="@+id/line"
-            app:timeAdapter="@{viewModel.weatherData.list.get(3).toFormattedTime()}"
+            app:timeAdapter="@{viewModel.fourthTimeElement}"
             tools:text="3AM" />
 
         <TextView
@@ -178,7 +178,7 @@
             app:layout_constraintEnd_toStartOf="@+id/step_one_temp"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:tempAdapter="@{viewModel.weatherData.list.get(0).main.temp}"
+            app:tempAdapter="@{viewModel.firstTemperatureElement}"
             tools:text="35" />
 
         <TextView
@@ -193,7 +193,7 @@
             app:layout_constraintEnd_toStartOf="@+id/step_two_temp"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/temp_now"
-            app:tempAdapter="@{viewModel.weatherData.list.get(1).main.temp}"
+            app:tempAdapter="@{viewModel.secondTemperatureElement}"
             tools:text="22
 " />
 
@@ -210,7 +210,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/step_one_temp"
             app:layout_constraintTop_toBottomOf="@+id/step_two"
-            app:tempAdapter="@{viewModel.weatherData.list.get(2).main.temp}"
+            app:tempAdapter="@{viewModel.thirdTemperatureElement}"
             tools:text="12" />
 
         <TextView
@@ -225,7 +225,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/step_two_temp"
-            app:tempAdapter="@{viewModel.weatherData.list.get(3).main.temp}"
+            app:tempAdapter="@{viewModel.fourthTemperatureElement}"
             tools:text="4" />
 
         <TextView
@@ -249,6 +249,8 @@
             android:layout_marginBottom="8dp"
             android:contentDescription="@string/sun_content_description"
             android:src="@drawable/previous"
+            android:onClick="@{()->viewModel.minusCounter()}"
+            app:previousAdapter="@{viewModel.counter}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -260,6 +262,8 @@
             android:layout_marginBottom="8dp"
             android:contentDescription="@string/sun_content_description"
             android:src="@drawable/next"
+            android:onClick="@{()-> viewModel.addCounter()}"
+            app:nextAdapter="@{viewModel.counter}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
