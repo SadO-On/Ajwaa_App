@@ -7,6 +7,7 @@ import com.example.weatheria.BuildConfig
 import com.example.weatheria.model.WeatherModel.WeatherResponse
 import com.example.weatheria.model.currentWeatherModel.CurrentWeatherResponse
 import com.example.weatheria.repository.WeatherRepository
+import com.example.weatheria.toFormattedDate
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.util.*
@@ -70,6 +71,9 @@ class WeatherViewModel : ViewModel() {
     val fourthTemperatureElement: LiveData<String>
         get() = _fourthTemperatureElement
 
+    private val _date = MutableLiveData<String>()
+    val date : LiveData<String>
+    get() = _date
 
 
     fun getWeatherData(location: Location) {
@@ -96,6 +100,8 @@ class WeatherViewModel : ViewModel() {
                     _weatherDataResponse.value?.list?.get(3)?.toFormattedTime()
                 _fourthTemperatureElement.value =
                     _weatherDataResponse.value?.list?.get(3)?.main?.temp?.toInt().toString()
+                _date.value = toFormattedDate(_weatherDataResponse.value?.list?.get(0)?.dtTxt)
+                Log.e(TAG , "today" + _weatherDataResponse.value?.list?.get(0)?.dtTxt)
             } catch (e: Exception) {
                 Log.e(TAG, e.message.toString())
             }
@@ -119,13 +125,11 @@ class WeatherViewModel : ViewModel() {
                     BuildConfig.openWeatherApiKey
                 ).body()
                 _mainWeatherStatus.value = _currentWeatherDataResponse.value?.weather?.get(0)?.main
-                _mainTemperature.value =
-                    _currentWeatherDataResponse.value?.main?.temp?.toInt().toString()
+                _mainTemperature.value = _currentWeatherDataResponse.value?.main?.temp?.toInt().toString()
                 _cityName.value = _currentWeatherDataResponse.value?.name
             } catch (e: Exception) {
                 Log.e(TAG, e.message.toString())
             }
-
         }
     }
 
@@ -186,6 +190,7 @@ class WeatherViewModel : ViewModel() {
 
     private fun setVaribale(i: Int, list: List<com.example.weatheria.model.WeatherModel.List>) {
         Log.e(TAG , list[i].dtTxt)
+        _date.value = toFormattedDate(list[i].dtTxt)
         _mainWeatherStatus.value = list[i].weather[0].main
         _mainTemperature.value = list[i].main.temp.toInt().toString()
         _firstTimeElement.value = list[i].toFormattedTime()

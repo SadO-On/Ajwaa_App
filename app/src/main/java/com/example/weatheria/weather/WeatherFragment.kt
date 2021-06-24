@@ -82,7 +82,7 @@ class WeatherFragment : Fragment() {
     @SuppressLint("MissingPermission")
     private fun getLocation() {
         if (isLocationEnabled()) {
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                 if (location == null) {
                     Log.e(TAG, " Null value: not entered")
                     requestNewLocationData()
@@ -110,12 +110,12 @@ class WeatherFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     private fun requestNewLocationData() {
-        Log.i(TAG , "Entered requestNewLocationData")
+        Log.i(TAG, "Entered requestNewLocationData")
         var locationRequest = LocationRequest.create().apply {
             interval = 4000
             fastestInterval = 2000
             numUpdates = 1
-            priority= LocationRequest.PRIORITY_HIGH_ACCURACY
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         fusedLocationClient.requestLocationUpdates(
@@ -123,13 +123,12 @@ class WeatherFragment : Fragment() {
             locationCallback,
             Looper.myLooper()
         )
-
     }
 
     private val locationCallback = object : LocationCallback() {
 
         override fun onLocationResult(p0: LocationResult) {
-            Log.i(TAG , "new Location value is : " + p0.lastLocation.toString())
+            Log.i(TAG, "new Location value is : " + p0.lastLocation.toString())
             var lastLocation = p0.lastLocation
             weatherViewModel.getWeatherData(lastLocation)
             weatherViewModel.getCurrentWeatherData(lastLocation)
@@ -137,7 +136,7 @@ class WeatherFragment : Fragment() {
 
         override fun onLocationAvailability(p0: LocationAvailability) {
             super.onLocationAvailability(p0)
-            Log.e(TAG , "Is Location Available"+p0.isLocationAvailable)
+            Log.e(TAG, "Is Location Available" + p0.isLocationAvailable)
         }
     }
 
@@ -146,18 +145,30 @@ class WeatherFragment : Fragment() {
         Log.i(TAG, weatherViewModel.time.value.toString())
         when {
             weatherViewModel.time.value!! in 13..17 -> {
-                binding.background.setImageResource(R.drawable.afternoon_background)
-                binding.sun.setImageResource(R.drawable.sun2)
+                setDrawable(
+                    R.drawable.afternoon_background,
+                    R.drawable.sun2,
+                    R.drawable.next_afternoon,
+                    R.drawable.previous_afternoon
+                )
                 commonColorChanger(R.color.afternoon_color)
             }
             weatherViewModel.time.value!! >= 18 || weatherViewModel.time.value!! <= 5 -> {
-                binding.background.setImageResource(R.drawable.background)
-                binding.sun.setImageResource(R.drawable.sun)
+                setDrawable(
+                    R.drawable.background,
+                    R.drawable.sun,
+                    R.drawable.next,
+                    R.drawable.previous
+                )
                 commonColorChanger(R.color.night_color)
             }
             else -> {
-                binding.background.setImageResource(R.drawable.day)
-                binding.sun.setImageResource(R.drawable.sun)
+                setDrawable(
+                    R.drawable.day,
+                    R.drawable.sun,
+                    R.drawable.next_morning,
+                    R.drawable.previous_morning
+                )
                 binding.temperature.setTextColor(
                     ContextCompat.getColor(
                         requireContext(),
@@ -175,6 +186,13 @@ class WeatherFragment : Fragment() {
         }
     }
 
+    private fun setDrawable(background: Int, sun: Int, next: Int, previous: Int) {
+        binding.background.setImageResource(background)
+        binding.sun.setImageResource(sun)
+        binding.next.setImageResource(next)
+        binding.previous.setImageResource(previous)
+    }
+
     private fun commonColorChanger(color: Int) {
         binding.line.setColorFilter(ContextCompat.getColor(requireContext(), color))
         binding.cityName.setTextColor(ContextCompat.getColor(requireContext(), color))
@@ -187,7 +205,5 @@ class WeatherFragment : Fragment() {
         binding.stepTwoTemp.setTextColor(ContextCompat.getColor(requireContext(), color))
         binding.stepThreeTemp.setTextColor(ContextCompat.getColor(requireContext(), color))
         binding.daysChanger.setTextColor(ContextCompat.getColor(requireContext(), color))
-        binding.previous.setColorFilter(ContextCompat.getColor(requireContext(), color))
-        binding.next.setColorFilter(ContextCompat.getColor(requireContext(), color))
     }
 }

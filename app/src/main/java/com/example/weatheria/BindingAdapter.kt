@@ -32,6 +32,15 @@ fun bindTimeFirst(textView: TextView , time : String?){
     }
 }
 
+@BindingAdapter("dateAdapter")
+fun bindDateFirst(textView: TextView , time : String?){
+    if(!time.isNullOrEmpty()){
+        textView.text = time
+    }else {
+        textView.text = "--/--"
+    }
+}
+
 @BindingAdapter("nextAdapter")
 fun nextVisibility(imageView: ImageView, counter :Int?){
     if(counter == 4){
