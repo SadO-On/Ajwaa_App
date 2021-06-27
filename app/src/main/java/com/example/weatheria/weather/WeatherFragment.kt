@@ -5,6 +5,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Looper
@@ -15,10 +16,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.weatheria.BuildConfig
 import com.example.weatheria.R
 import com.example.weatheria.databinding.WeatherFragmentBinding
@@ -34,6 +37,8 @@ class WeatherFragment : Fragment() {
     private lateinit var weatherViewModel: WeatherViewModel
 
     private lateinit var binding: WeatherFragmentBinding
+
+    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private val TAG = "WeatherFragment"
 
     override fun onCreateView(
@@ -49,9 +54,18 @@ class WeatherFragment : Fragment() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         requestPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         changeBackground()
+
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mSwipeRefreshLayout = requireView().findViewById(R.id.swiperefresh)
+        mSwipeRefreshLayout.setOnRefreshListener {
+            getLocation()
+            changeBackground()
+        }
+    }
     override fun onStart() {
         super.onStart()
         requestNewLocationData()
@@ -81,22 +95,27 @@ class WeatherFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     private fun getLocation() {
-        if (isLocationEnabled()) {
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                if (location == null) {
-                    Log.e(TAG, " Null value: not entered")
-                    requestNewLocationData()
-                } else {
-                    Log.i(TAG, location.toString())
-                    weatherViewModel.getWeatherData(location)
-                    weatherViewModel.getCurrentWeatherData(location)
+        if (checkPermissionGranted()) {
+            if (isLocationEnabled()) {
+                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                    if (location == null) {
+                        Log.e(TAG, " Null value: not entered")
+                        requestNewLocationData()
+                    } else {
+                        Log.i(TAG, location.toString())
+                        weatherViewModel.getWeatherData(location)
+                        weatherViewModel.getCurrentWeatherData(location)
+                    }
                 }
+            } else {
+                Toast.makeText(requireContext(), "Turn on the Location", Toast.LENGTH_LONG).show()
+                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                requireActivity().startActivity(intent)
             }
-        } else {
-            Toast.makeText(requireContext(), "Turn on the Location", Toast.LENGTH_LONG).show()
-            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-            requireActivity().startActivity(intent)
+        }else{
+            requestPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
+        mSwipeRefreshLayout.isRefreshing = false
     }
 
     private fun isLocationEnabled(): Boolean {
@@ -140,6 +159,15 @@ class WeatherFragment : Fragment() {
         }
     }
 
+    private fun checkPermissionGranted(): Boolean {
+        return ActivityCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    }
 
     private fun changeBackground() {
         Log.i(TAG, weatherViewModel.time.value.toString())

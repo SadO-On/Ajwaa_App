@@ -2,283 +2,288 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="viewModel"
-            type="com.example.weatheria.weather.WeatherViewModel"/>
+            type="com.example.weatheria.weather.WeatherViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main_screen"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:src="@drawable/background"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.75"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:layout_constraintWidth_percent="1.25" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main_screen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/line"
-            android:layout_width="0dp"
-            android:layout_height="5dp"
-            android:src="@drawable/line"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.1"
-            app:layout_constraintHorizontal_bias="0.36"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/city_name"
-            app:layout_constraintVertical_bias="0.00999999"
-            app:layout_constraintWidth_percent="1" />
+            <ImageView
+                android:id="@+id/background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.75"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintWidth_percent="1.25" />
 
-        <TextView
-            android:id="@+id/weather_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:fontFamily="@font/cairo_extralight"
-            android:textColor="@color/white"
-            android:textSize="36sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.056"
-            app:weatherAdapter="@{viewModel.mainWeatherStatus}"
-            tools:text="Clear" />
+            <ImageView
+                android:id="@+id/line"
+                android:layout_width="0dp"
+                android:layout_height="5dp"
+                android:src="@drawable/line"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.1"
+                app:layout_constraintHorizontal_bias="0.36"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/city_name"
+                app:layout_constraintVertical_bias="0.00999999"
+                app:layout_constraintWidth_percent="1" />
 
-        <TextView
-            android:id="@+id/temperature"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/cairo_extralight"
-            android:textColor="@color/white"
-            android:textSize="72sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/weather_description"
-            app:layout_constraintVertical_bias="0.0"
-            app:tempAdapter="@{viewModel.mainTemperature}"
-            tools:text="37°" />
+            <TextView
+                android:id="@+id/weather_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:fontFamily="@font/cairo_extralight"
+                android:textColor="@color/white"
+                android:textSize="36sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.056"
+                app:weatherAdapter="@{viewModel.mainWeatherStatus}"
+                tools:text="Clear" />
 
-        <ImageView
-            android:id="@+id/sun"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:contentDescription="@string/sun_content_description"
-            android:src="@drawable/sun"
-            app:layout_constraintBottom_toBottomOf="@+id/temperature"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.89"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cairo_extralight"
+                android:textColor="@color/white"
+                android:textSize="72sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/weather_description"
+                app:layout_constraintVertical_bias="0.0"
+                app:tempAdapter="@{viewModel.mainTemperature}"
+                tools:text="37°" />
 
-        <TextView
-            android:id="@+id/city_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/cairo_extralight"
-            android:text="@{viewModel.cityName}"
-            android:textColor="@color/night_color"
-            android:textSize="36sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/weather_description"
-            app:layout_constraintVertical_bias="0.65"
-            tools:text="Jeddah" />
+            <ImageView
+                android:id="@+id/sun"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:contentDescription="@string/sun_content_description"
+                android:src="@drawable/sun"
+                app:layout_constraintBottom_toBottomOf="@+id/temperature"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.89"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/now_temp_string"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/cairo_extralight"
-            android:textColor="@color/night_color"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/step_one"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/line"
-            app:timeAdapter="@{viewModel.firstTimeElement}"
-            tools:text="11PM"
-            />
+            <TextView
+                android:id="@+id/city_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/cairo_extralight"
+                android:text="@{viewModel.cityName}"
+                android:textColor="@color/night_color"
+                android:textSize="36sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/weather_description"
+                app:layout_constraintVertical_bias="0.65"
+                tools:text="Jeddah" />
 
-        <TextView
-            android:id="@+id/step_one"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/cairo_extralight"
-            android:textColor="@color/night_color"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/step_two"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toEndOf="@+id/now_temp_string"
-            app:layout_constraintTop_toBottomOf="@+id/line"
-            app:timeAdapter="@{viewModel.secondTimeElement}"
-            tools:text="1AM" />
+            <TextView
+                android:id="@+id/now_temp_string"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/cairo_extralight"
+                android:textColor="@color/night_color"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toStartOf="@+id/step_one"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/line"
+                app:timeAdapter="@{viewModel.firstTimeElement}"
+                tools:text="11PM" />
 
-        <TextView
-            android:id="@+id/step_two"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:fontFamily="@font/cairo_extralight"
-            android:textColor="@color/night_color"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/step_three"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/step_one"
-            app:layout_constraintTop_toBottomOf="@+id/line"
-            app:timeAdapter="@{viewModel.thirdTimeElement}"
-            tools:text="2AM" />
+            <TextView
+                android:id="@+id/step_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/cairo_extralight"
+                android:textColor="@color/night_color"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toStartOf="@+id/step_two"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toEndOf="@+id/now_temp_string"
+                app:layout_constraintTop_toBottomOf="@+id/line"
+                app:timeAdapter="@{viewModel.secondTimeElement}"
+                tools:text="1AM" />
 
-        <TextView
-            android:id="@+id/step_three"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/cairo_extralight"
-            android:textColor="@color/night_color"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/step_two"
-            app:layout_constraintTop_toBottomOf="@+id/line"
-            app:timeAdapter="@{viewModel.fourthTimeElement}"
-            tools:text="3AM" />
+            <TextView
+                android:id="@+id/step_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/cairo_extralight"
+                android:textColor="@color/night_color"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toStartOf="@+id/step_three"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/step_one"
+                app:layout_constraintTop_toBottomOf="@+id/line"
+                app:timeAdapter="@{viewModel.thirdTimeElement}"
+                tools:text="2AM" />
 
-        <TextView
-            android:id="@+id/temp_now"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/cairo_extralight"
-            android:textColor="@color/night_color"
-            android:textSize="18sp"
+            <TextView
+                android:id="@+id/step_three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/cairo_extralight"
+                android:textColor="@color/night_color"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/step_two"
+                app:layout_constraintTop_toBottomOf="@+id/line"
+                app:timeAdapter="@{viewModel.fourthTimeElement}"
+                tools:text="3AM" />
 
-            app:layout_constraintBaseline_toBaselineOf="@+id/step_one_temp"
-            app:layout_constraintEnd_toStartOf="@+id/step_one_temp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:tempAdapter="@{viewModel.firstTemperatureElement}"
-            tools:text="35" />
+            <TextView
+                android:id="@+id/temp_now"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cairo_extralight"
+                android:textColor="@color/night_color"
+                android:textSize="18sp"
 
-        <TextView
-            android:id="@+id/step_one_temp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/cairo_extralight"
-            android:textColor="@color/night_color"
-            android:textSize="18sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/step_one_temp"
+                app:layout_constraintEnd_toStartOf="@+id/step_one_temp"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:tempAdapter="@{viewModel.firstTemperatureElement}"
+                tools:text="35" />
 
-            app:layout_constraintBaseline_toBaselineOf="@+id/step_two_temp"
-            app:layout_constraintEnd_toStartOf="@+id/step_two_temp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/temp_now"
-            app:tempAdapter="@{viewModel.secondTemperatureElement}"
-            tools:text="22
+            <TextView
+                android:id="@+id/step_one_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cairo_extralight"
+                android:textColor="@color/night_color"
+                android:textSize="18sp"
+
+                app:layout_constraintBaseline_toBaselineOf="@+id/step_two_temp"
+                app:layout_constraintEnd_toStartOf="@+id/step_two_temp"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/temp_now"
+                app:tempAdapter="@{viewModel.secondTemperatureElement}"
+                tools:text="22
 " />
 
-        <TextView
-            android:id="@+id/step_two_temp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/cairo_extralight"
-            android:textColor="@color/night_color"
+            <TextView
+                android:id="@+id/step_two_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/cairo_extralight"
+                android:textColor="@color/night_color"
 
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/step_three_temp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/step_one_temp"
-            app:layout_constraintTop_toBottomOf="@+id/step_two"
-            app:tempAdapter="@{viewModel.thirdTemperatureElement}"
-            tools:text="12" />
+                android:textSize="18sp"
+                app:layout_constraintEnd_toStartOf="@+id/step_three_temp"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/step_one_temp"
+                app:layout_constraintTop_toBottomOf="@+id/step_two"
+                app:tempAdapter="@{viewModel.thirdTemperatureElement}"
+                tools:text="12" />
 
-        <TextView
-            android:id="@+id/step_three_temp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/cairo_extralight"
-            android:textColor="@color/night_color"
+            <TextView
+                android:id="@+id/step_three_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cairo_extralight"
+                android:textColor="@color/night_color"
 
-            android:textSize="18sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/step_two_temp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/step_two_temp"
-            app:tempAdapter="@{viewModel.fourthTemperatureElement}"
-            tools:text="4" />
+                android:textSize="18sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/step_two_temp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/step_two_temp"
+                app:tempAdapter="@{viewModel.fourthTemperatureElement}"
+                tools:text="4" />
 
-        <TextView
-            android:id="@+id/days_changer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/cairo_extralight"
-            android:textColor="@color/night_color"
-            android:textSize="24sp"
-            android:text="@string/days"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            />
+            <TextView
+                android:id="@+id/days_changer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cairo_extralight"
+                android:text="@string/days"
+                android:textColor="@color/night_color"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        <ImageView
-            android:id="@+id/previous"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp"
-            android:contentDescription="@string/sun_content_description"
-            android:src="@drawable/previous"
-            android:onClick="@{()->viewModel.minusCounter()}"
-            app:previousAdapter="@{viewModel.counter}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            <ImageView
+                android:id="@+id/previous"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="@string/sun_content_description"
+                android:onClick="@{()->viewModel.minusCounter()}"
+                android:src="@drawable/previous"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:previousAdapter="@{viewModel.counter}" />
 
-        <ImageView
-            android:id="@+id/next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:contentDescription="@string/sun_content_description"
-            android:src="@drawable/next"
-            android:onClick="@{()-> viewModel.addCounter()}"
-            app:nextAdapter="@{viewModel.counter}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <ImageView
+                android:id="@+id/next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="@string/sun_content_description"
+                android:onClick="@{()-> viewModel.addCounter()}"
+                android:src="@drawable/next"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:nextAdapter="@{viewModel.counter}" />
 
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/cairo_extralight"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:textSize="30sp"
-            android:textColor="@color/white"
-            app:dateAdapter="@{viewModel.date}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="6/3" />
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/cairo_extralight"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                app:dateAdapter="@{viewModel.date}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="6/3" />
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>

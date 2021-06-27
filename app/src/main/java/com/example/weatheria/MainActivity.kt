@@ -10,12 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
 
     /*
-
-    * 1-change current date to current weather API
-    * 2-handle API errors
-    * 3-support rtl
-    *
-    * */
+    * 1-change current date to current weather API [*BUG*]
+    * 2-handle API errors + Cleaning code [*FEATURE*]
+    * 3-support rtl [*FEATURE*]
+    * 4-Support Swipe-to-Refresh [*FEATURE*] [DONE]
+    */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
