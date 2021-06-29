@@ -1,6 +1,5 @@
 package com.example.weatheria.weather
 
-import android.os.Bundle
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,7 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.net.Uri
-import android.os.Looper
+import android.os.*
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,7 +17,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -27,8 +25,7 @@ import com.example.weatheria.R
 import com.example.weatheria.databinding.WeatherFragmentBinding
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
-import java.util.*
-import java.util.concurrent.TimeUnit
+
 
 class WeatherFragment : Fragment() {
 
@@ -54,7 +51,6 @@ class WeatherFragment : Fragment() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         requestPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         changeBackground()
-
         return binding.root
     }
 
@@ -234,4 +230,5 @@ class WeatherFragment : Fragment() {
         binding.stepThreeTemp.setTextColor(ContextCompat.getColor(requireContext(), color))
         binding.daysChanger.setTextColor(ContextCompat.getColor(requireContext(), color))
     }
+
 }

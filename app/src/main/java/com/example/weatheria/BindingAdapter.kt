@@ -59,3 +59,13 @@ fun previousVisibility(imageView: ImageView, counter :Int?){
 
     }
 }
+@BindingAdapter("filipRtl")
+fun filipImage(imageView: ImageView, lang: String?){
+    if(!lang.isNullOrEmpty()){
+        if(lang == "ar"){
+            imageView.scaleX = -1F
+        }else{
+            imageView.scaleX = 1F
+        }
+    }
+}

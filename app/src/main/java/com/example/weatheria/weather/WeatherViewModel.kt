@@ -19,7 +19,7 @@ class WeatherViewModel : ViewModel() {
     private val _weatherDataResponse = MutableLiveData<WeatherResponse>()
     private val _currentWeatherDataResponse = MutableLiveData<CurrentWeatherResponse>()
 
-    private val language = Locale.getDefault().language
+     val language: String = Locale.getDefault().language
 
     private val _counter = MutableLiveData<Int>(0)
     val counter: LiveData<Int>
@@ -130,7 +130,7 @@ class WeatherViewModel : ViewModel() {
                     BuildConfig.openWeatherApiKey,
                     language
                 ).body()
-                _mainWeatherStatus.value = _currentWeatherDataResponse.value?.weather?.get(0)?.description
+                _mainWeatherStatus.value = if (language == "ar") _currentWeatherDataResponse.value?.weather?.get(0)?.description else _currentWeatherDataResponse.value?.weather?.get(0)?.main
                 _mainTemperature.value = _currentWeatherDataResponse.value?.main?.temp?.toInt().toString()
                 _cityName.value = _currentWeatherDataResponse.value?.name
                 _counter.value = 0
@@ -198,7 +198,7 @@ class WeatherViewModel : ViewModel() {
     private fun setVaribale(i: Int, list: List<com.example.weatheria.model.WeatherModel.List>) {
         Log.e(TAG , list[i].dtTxt)
         _date.value = toFormattedDate(list[i].dtTxt)
-        _mainWeatherStatus.value = list[i].weather[0].description
+        _mainWeatherStatus.value = if (language == "ar") _currentWeatherDataResponse.value?.weather?.get(0)?.description else _currentWeatherDataResponse.value?.weather?.get(0)?.main
         _mainTemperature.value = list[i].main.temp.toInt().toString()
         _firstTimeElement.value = list[i].toFormattedTime()
         _firstTemperatureElement.value = list[i + 1].main.temp.toInt().toString()
