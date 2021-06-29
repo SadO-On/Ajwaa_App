@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
     /*
     * 1-change current date to current weather API [*BUG*]
     * 2-handle API errors + Cleaning code [*FEATURE*]
-    * 3-support rtl [*FEATURE*]
+    * 3-support rtl [*FEATURE*] [DONE]
     * 4-Support Swipe-to-Refresh [*FEATURE*] [DONE]
     */
     override fun onCreate(savedInstanceState: Bundle?) {

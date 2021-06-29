@@ -11,7 +11,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-val BASE_URL = "https://api.openweathermap.org/"
+const val BASE_URL = "https://api.openweathermap.org/"
 
 interface OpenWeatherApi {
     @GET("data/2.5/forecast")
@@ -19,7 +19,8 @@ interface OpenWeatherApi {
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
         @Query("appid") apiKey: String,
-        @Query("units") type : String
+        @Query("units") type : String,
+        @Query("lang") lang : String
     ): Response<WeatherResponse>
 
    @GET("data/2.5/weather")
@@ -27,7 +28,8 @@ interface OpenWeatherApi {
        @Query("lat") lat: Double,
        @Query("lon") lon: Double,
        @Query("appid") apiKey: String,
-       @Query("units") type : String
+       @Query("units") type : String,
+       @Query("lang") lang : String
    ) : Response<CurrentWeatherResponse>
 }
 

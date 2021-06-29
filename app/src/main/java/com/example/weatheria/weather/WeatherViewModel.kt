@@ -19,6 +19,8 @@ class WeatherViewModel : ViewModel() {
     private val _weatherDataResponse = MutableLiveData<WeatherResponse>()
     private val _currentWeatherDataResponse = MutableLiveData<CurrentWeatherResponse>()
 
+    private val language = Locale.getDefault().language
+
     private val _counter = MutableLiveData<Int>(0)
     val counter: LiveData<Int>
         get() = _counter
@@ -82,7 +84,8 @@ class WeatherViewModel : ViewModel() {
                 _weatherDataResponse.value = repository.getWeather(
                     location.latitude,
                     location.longitude,
-                    BuildConfig.openWeatherApiKey
+                    BuildConfig.openWeatherApiKey,
+                    language
                 ).body()
                 _firstTimeElement.value =
                     _weatherDataResponse.value?.list?.get(0)?.toFormattedTime()
@@ -101,6 +104,7 @@ class WeatherViewModel : ViewModel() {
                 _fourthTemperatureElement.value =
                     _weatherDataResponse.value?.list?.get(3)?.main?.temp?.toInt().toString()
                 _date.value = toFormattedDate(_weatherDataResponse.value?.list?.get(0)?.dtTxt)
+                _counter.value = 0
                 Log.e(TAG , "today" + _weatherDataResponse.value?.list?.get(0)?.dtTxt)
             } catch (e: Exception) {
                 Log.e(TAG, e.message.toString())
@@ -116,17 +120,20 @@ class WeatherViewModel : ViewModel() {
                     "Today is:" + repository.getCurrentWeatherData(
                         location.latitude,
                         location.longitude,
-                        BuildConfig.openWeatherApiKey
+                        BuildConfig.openWeatherApiKey,
+                        language
                     ).body().toString()
                 )
                 _currentWeatherDataResponse.value = repository.getCurrentWeatherData(
                     location.latitude,
                     location.longitude,
-                    BuildConfig.openWeatherApiKey
+                    BuildConfig.openWeatherApiKey,
+                    language
                 ).body()
-                _mainWeatherStatus.value = _currentWeatherDataResponse.value?.weather?.get(0)?.main
+                _mainWeatherStatus.value = _currentWeatherDataResponse.value?.weather?.get(0)?.description
                 _mainTemperature.value = _currentWeatherDataResponse.value?.main?.temp?.toInt().toString()
                 _cityName.value = _currentWeatherDataResponse.value?.name
+                _counter.value = 0
             } catch (e: Exception) {
                 Log.e(TAG, e.message.toString())
             }
@@ -191,7 +198,7 @@ class WeatherViewModel : ViewModel() {
     private fun setVaribale(i: Int, list: List<com.example.weatheria.model.WeatherModel.List>) {
         Log.e(TAG , list[i].dtTxt)
         _date.value = toFormattedDate(list[i].dtTxt)
-        _mainWeatherStatus.value = list[i].weather[0].main
+        _mainWeatherStatus.value = list[i].weather[0].description
         _mainTemperature.value = list[i].main.temp.toInt().toString()
         _firstTimeElement.value = list[i].toFormattedTime()
         _firstTemperatureElement.value = list[i + 1].main.temp.toInt().toString()

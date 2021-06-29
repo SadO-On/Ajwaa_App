@@ -9,7 +9,7 @@ import com.example.weatheria.model.WeatherModel.Weather
 @BindingAdapter("tempAdapter")
 fun bindTemp(textView: TextView ,data : String?){
     if (!data.isNullOrEmpty()) {
-        textView.text = data
+        textView.text = data.plus("°")
     } else {
             textView.text = "--°"
         }
