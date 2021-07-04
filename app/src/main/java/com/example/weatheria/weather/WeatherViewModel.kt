@@ -134,6 +134,7 @@ class WeatherViewModel : ViewModel() {
                 _mainTemperature.value = _currentWeatherDataResponse.value?.main?.temp?.toInt().toString()
                 _cityName.value = _currentWeatherDataResponse.value?.name
                 _counter.value = 0
+                Log.i(TAG ,"" + _mainWeatherStatus.value)
             } catch (e: Exception) {
                 Log.e(TAG, e.message.toString())
             }
@@ -163,7 +164,7 @@ class WeatherViewModel : ViewModel() {
         if (list != null) {
             for (i in list.indices) {
                 if (desiredDay.before(Date(list[i].dt * 1000L))) {
-                    setVaribale(i, list)
+                    setVariables(i, list)
                     return
                 }
             }
@@ -188,14 +189,14 @@ class WeatherViewModel : ViewModel() {
         if (list != null) {
             for (i in list.indices) {
                 if (Date(list[i].dt * 1000L).after(desiredDay)) {
-                    setVaribale(i, list)
+                    setVariables(i, list)
                     return
                 }
             }
         }
     }
 
-    private fun setVaribale(i: Int, list: List<com.example.weatheria.model.WeatherModel.List>) {
+    private fun setVariables(i: Int, list: List<com.example.weatheria.model.WeatherModel.List>) {
         Log.e(TAG , list[i].dtTxt)
         _date.value = toFormattedDate(list[i].dtTxt)
         _mainWeatherStatus.value = if (language == "ar") _currentWeatherDataResponse.value?.weather?.get(0)?.description else _currentWeatherDataResponse.value?.weather?.get(0)?.main

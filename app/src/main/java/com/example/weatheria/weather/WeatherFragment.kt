@@ -18,11 +18,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.weatheria.BuildConfig
 import com.example.weatheria.R
 import com.example.weatheria.databinding.WeatherFragmentBinding
+import com.github.matteobattilana.weather.PrecipType
+import com.github.matteobattilana.weather.WeatherView
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 
@@ -36,6 +39,8 @@ class WeatherFragment : Fragment() {
     private lateinit var binding: WeatherFragmentBinding
 
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
+
+    private lateinit var weatherView : WeatherView
     private val TAG = "WeatherFragment"
 
     override fun onCreateView(
@@ -51,6 +56,18 @@ class WeatherFragment : Fragment() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         requestPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         changeBackground()
+        weatherView  = requireActivity().findViewById(R.id.weather_view)
+        weatherViewModel.mainWeatherStatus.observe(viewLifecycleOwner , {
+            Log.i(TAG , "entered")
+            if(it == "Rain" || it.startsWith("مطر")){
+                weatherView.setWeatherData(PrecipType.RAIN)
+            }else if(it == "Snow" || it.startsWith("ثلوج")){
+                weatherView.setWeatherData(PrecipType.SNOW)
+
+            }else{
+                weatherView.setWeatherData(PrecipType.CLEAR)
+            }
+        })
         return binding.root
     }
 
@@ -65,6 +82,7 @@ class WeatherFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         requestNewLocationData()
+
     }
 
 
