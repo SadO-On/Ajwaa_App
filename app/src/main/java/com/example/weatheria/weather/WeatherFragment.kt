@@ -18,7 +18,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.weatheria.BuildConfig
@@ -28,6 +27,7 @@ import com.github.matteobattilana.weather.PrecipType
 import com.github.matteobattilana.weather.WeatherView
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
+
 
 
 class WeatherFragment : Fragment() {
@@ -41,6 +41,8 @@ class WeatherFragment : Fragment() {
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
     private lateinit var weatherView : WeatherView
+
+
     private val TAG = "WeatherFragment"
 
     override fun onCreateView(
@@ -68,6 +70,8 @@ class WeatherFragment : Fragment() {
                 weatherView.setWeatherData(PrecipType.CLEAR)
             }
         })
+
+
         return binding.root
     }
 
@@ -82,8 +86,9 @@ class WeatherFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         requestNewLocationData()
-
     }
+
+
 
 
     private val requestPermission =
