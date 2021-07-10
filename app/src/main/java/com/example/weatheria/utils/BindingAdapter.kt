@@ -1,10 +1,10 @@
-package com.example.weatheria
+package com.example.weatheria.utils
 
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.example.weatheria.model.WeatherModel.Weather
 
 @BindingAdapter("tempAdapter")
 fun bindTemp(textView: TextView ,data : String?){
@@ -67,5 +67,13 @@ fun filipImage(imageView: ImageView, lang: String?){
         }else{
             imageView.scaleX = 1F
         }
+    }
+}
+@BindingAdapter("progressBar")
+fun bindProgressbar(progressBar: ProgressBar , data : String ?){
+    if(!data.isNullOrEmpty()){
+       progressBar.visibility = View.GONE
+    }else {
+        progressBar.visibility = View.VISIBLE
     }
 }

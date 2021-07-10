@@ -8,18 +8,19 @@ import com.example.weatheria.model.WeatherModel.WeatherResponse
 import com.example.weatheria.model.currentWeatherModel.CurrentWeatherResponse
 import com.example.weatheria.repository.WeatherRepository
 import com.example.weatheria.toFormattedDate
+import com.example.weatheria.utils.Resource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.util.*
 import kotlin.time.ExperimentalTime
 
 class WeatherViewModel : ViewModel() {
-    private val TAG = "WeatherViewModel"
     private val repository: WeatherRepository = WeatherRepository()
     private val _weatherDataResponse = MutableLiveData<WeatherResponse>()
     private val _currentWeatherDataResponse = MutableLiveData<CurrentWeatherResponse>()
 
-     val language: String = Locale.getDefault().language
+    val language: String = Locale.getDefault().language
 
     private val _counter = MutableLiveData<Int>(0)
     val counter: LiveData<Int>
@@ -74,71 +75,81 @@ class WeatherViewModel : ViewModel() {
         get() = _fourthTemperatureElement
 
     private val _date = MutableLiveData<String>()
-    val date : LiveData<String>
-    get() = _date
+    val date: LiveData<String>
+        get() = _date
 
 
-    fun getWeatherData(location: Location) {
-        viewModelScope.launch {
-            try {
-                _weatherDataResponse.value = repository.getWeather(
-                    location.latitude,
-                    location.longitude,
-                    BuildConfig.openWeatherApiKey,
-                    language
-                ).body()
-                _firstTimeElement.value =
-                    _weatherDataResponse.value?.list?.get(0)?.toFormattedTime()
-                _firstTemperatureElement.value =
-                    _weatherDataResponse.value?.list?.get(0)?.main?.temp?.toInt().toString()
-                _secondTimeElement.value =
-                    _weatherDataResponse.value?.list?.get(1)?.toFormattedTime()
-                _secondTemperatureElement.value =
-                    _weatherDataResponse.value?.list?.get(1)?.main?.temp?.toInt().toString()
-                _thirdTimeElement.value =
-                    _weatherDataResponse.value?.list?.get(2)?.toFormattedTime()
-                _thirdTemperatureElement.value =
-                    _weatherDataResponse.value?.list?.get(2)?.main?.temp?.toInt().toString()
-                _fourthTimeElement.value =
-                    _weatherDataResponse.value?.list?.get(3)?.toFormattedTime()
-                _fourthTemperatureElement.value =
-                    _weatherDataResponse.value?.list?.get(3)?.main?.temp?.toInt().toString()
-                _date.value = toFormattedDate(_weatherDataResponse.value?.list?.get(0)?.dtTxt)
-                _counter.value = 0
-                Log.e(TAG , "today" + _weatherDataResponse.value?.list?.get(0)?.dtTxt)
-            } catch (e: Exception) {
-                Log.e(TAG, e.message.toString())
-            }
+    fun getWeatherData(location: Location) = liveData(Dispatchers.IO) {
+        try {
+            val data = repository.getWeather(
+                location.latitude,
+                location.longitude,
+                BuildConfig.openWeatherApiKey,
+                language
+            )
+            _weatherDataResponse.postValue(data)
+            emit(
+                Resource.success(
+                    data = data
+                )
+            )
+        } catch (exception: Exception) {
+            emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
         }
     }
 
-    fun getCurrentWeatherData(location: Location) {
-        viewModelScope.launch {
-            try {
-                Log.i(
-                    TAG,
-                    "Today is:" + repository.getCurrentWeatherData(
-                        location.latitude,
-                        location.longitude,
-                        BuildConfig.openWeatherApiKey,
-                        language
-                    ).body().toString()
+    fun settingValuesOnWeatherDataSuccess() {
+        _weatherDataResponse
+        _firstTimeElement.value =
+            _weatherDataResponse.value?.list?.get(0)?.toFormattedTime()
+        _firstTemperatureElement.value =
+            _weatherDataResponse.value?.list?.get(0)?.main?.temp?.toInt().toString()
+        _secondTimeElement.value =
+            _weatherDataResponse.value?.list?.get(1)?.toFormattedTime()
+        _secondTemperatureElement.value =
+            _weatherDataResponse.value?.list?.get(1)?.main?.temp?.toInt().toString()
+        _thirdTimeElement.value =
+            _weatherDataResponse.value?.list?.get(2)?.toFormattedTime()
+        _thirdTemperatureElement.value =
+            _weatherDataResponse.value?.list?.get(2)?.main?.temp?.toInt().toString()
+        _fourthTimeElement.value =
+            _weatherDataResponse.value?.list?.get(3)?.toFormattedTime()
+        _fourthTemperatureElement.value =
+            _weatherDataResponse.value?.list?.get(3)?.main?.temp?.toInt().toString()
+        _date.value = toFormattedDate(_weatherDataResponse.value?.list?.get(0)?.dtTxt)
+        _counter.value = 0
+    }
+
+    fun getCurrentWeatherData(location: Location) = liveData(Dispatchers.IO) {
+        try {
+            val data = repository.getCurrentWeatherData(
+                location.latitude,
+                location.longitude,
+                BuildConfig.openWeatherApiKey,
+                language
+            )
+            _currentWeatherDataResponse.postValue(data)
+
+            emit(
+                Resource.success(
+                    data = data
                 )
-                _currentWeatherDataResponse.value = repository.getCurrentWeatherData(
-                    location.latitude,
-                    location.longitude,
-                    BuildConfig.openWeatherApiKey,
-                    language
-                ).body()
-                _mainWeatherStatus.value = if (language == "ar") _currentWeatherDataResponse.value?.weather?.get(0)?.description else _currentWeatherDataResponse.value?.weather?.get(0)?.main
-                _mainTemperature.value = _currentWeatherDataResponse.value?.main?.temp?.toInt().toString()
-                _cityName.value = _currentWeatherDataResponse.value?.name
-                _counter.value = 0
-                Log.i(TAG ,"" + _mainWeatherStatus.value)
-            } catch (e: Exception) {
-                Log.e(TAG, e.message.toString())
-            }
+            )
+        } catch (exception: Exception) {
+            emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
         }
+    }
+
+
+    fun settingValuesOnCurrentWeatherSuccess() {
+        _mainWeatherStatus.value =
+            if (language == "ar") _currentWeatherDataResponse.value?.weather?.get(0)?.description else _currentWeatherDataResponse.value?.weather?.get(
+                0
+            )?.main
+        _mainTemperature.value =
+            _currentWeatherDataResponse.value?.main?.temp?.toInt().toString()
+        _cityName.value = _currentWeatherDataResponse.value?.name
+        _counter.value = 0
     }
 
     fun getTime() {
@@ -157,10 +168,10 @@ class WeatherViewModel : ViewModel() {
 
     @ExperimentalTime
     private fun nextDay() {
-       val calender = Calendar.getInstance()
-         val today = calender.timeInMillis
-         val desiredDay = Date(today + 86400000 * _counter.value!!)
-         val list = _weatherDataResponse.value?.list
+        val calender = Calendar.getInstance()
+        val today = calender.timeInMillis
+        val desiredDay = Date(today + 86400000 * _counter.value!!)
+        val list = _weatherDataResponse.value?.list
         if (list != null) {
             for (i in list.indices) {
                 if (desiredDay.before(Date(list[i].dt * 1000L))) {
@@ -182,10 +193,10 @@ class WeatherViewModel : ViewModel() {
 
     @ExperimentalTime
     private fun previousDay() {
-         val calender = Calendar.getInstance()
-         val today = calender.timeInMillis
-         val desiredDay = Date(today + 86400000 * _counter.value!!)
-         val list = _weatherDataResponse.value?.list
+        val calender = Calendar.getInstance()
+        val today = calender.timeInMillis
+        val desiredDay = Date(today + 86400000 * _counter.value!!)
+        val list = _weatherDataResponse.value?.list
         if (list != null) {
             for (i in list.indices) {
                 if (Date(list[i].dt * 1000L).after(desiredDay)) {
@@ -197,9 +208,11 @@ class WeatherViewModel : ViewModel() {
     }
 
     private fun setVariables(i: Int, list: List<com.example.weatheria.model.WeatherModel.List>) {
-        Log.e(TAG , list[i].dtTxt)
         _date.value = toFormattedDate(list[i].dtTxt)
-        _mainWeatherStatus.value = if (language == "ar") _currentWeatherDataResponse.value?.weather?.get(0)?.description else _currentWeatherDataResponse.value?.weather?.get(0)?.main
+        _mainWeatherStatus.value =
+            if (language == "ar") _currentWeatherDataResponse.value?.weather?.get(0)?.description else _currentWeatherDataResponse.value?.weather?.get(
+                0
+            )?.main
         _mainTemperature.value = list[i].main.temp.toInt().toString()
         _firstTimeElement.value = list[i].toFormattedTime()
         _firstTemperatureElement.value = list[i + 1].main.temp.toInt().toString()

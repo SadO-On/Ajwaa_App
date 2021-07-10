@@ -6,15 +6,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 
-
-
 class MainActivity : AppCompatActivity() {
-
-    /*
-    * 1-change current date to current weather API [*BUG*]
-    * 2-handle API errors + Cleaning code [*FEATURE*]
-    * 3-Use Weather library [*DONE*]
-    */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

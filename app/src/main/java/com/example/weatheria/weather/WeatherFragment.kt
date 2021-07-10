@@ -4,12 +4,13 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
 import android.os.*
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,12 +24,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.weatheria.BuildConfig
 import com.example.weatheria.R
 import com.example.weatheria.databinding.WeatherFragmentBinding
+import com.example.weatheria.utils.Status
 import com.github.matteobattilana.weather.PrecipType
 import com.github.matteobattilana.weather.WeatherView
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
-
-
 
 class WeatherFragment : Fragment() {
 
@@ -40,10 +40,7 @@ class WeatherFragment : Fragment() {
 
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
-    private lateinit var weatherView : WeatherView
-
-
-    private val TAG = "WeatherFragment"
+    private lateinit var weatherView: WeatherView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,20 +55,17 @@ class WeatherFragment : Fragment() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         requestPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         changeBackground()
-        weatherView  = requireActivity().findViewById(R.id.weather_view)
-        weatherViewModel.mainWeatherStatus.observe(viewLifecycleOwner , {
-            Log.i(TAG , "entered")
-            if(it == "Rain" || it.startsWith("مطر")){
+        weatherView = requireActivity().findViewById(R.id.weather_view)
+        weatherViewModel.mainWeatherStatus.observe(viewLifecycleOwner, {
+            if (it == "Rain" || it.startsWith("مطر")) {
                 weatherView.setWeatherData(PrecipType.RAIN)
-            }else if(it == "Snow" || it.startsWith("ثلوج")){
+            } else if (it == "Snow" || it.startsWith("ثلوج")) {
                 weatherView.setWeatherData(PrecipType.SNOW)
 
-            }else{
+            } else {
                 weatherView.setWeatherData(PrecipType.CLEAR)
             }
         })
-
-
         return binding.root
     }
 
@@ -83,19 +77,18 @@ class WeatherFragment : Fragment() {
             changeBackground()
         }
     }
+
     override fun onStart() {
         super.onStart()
         requestNewLocationData()
+        changeBackground()
     }
-
-
 
 
     private val requestPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
                 getLocation()
-                Log.i(TAG, "Entered")
             } else {
                 Snackbar
                     .make(
@@ -118,12 +111,9 @@ class WeatherFragment : Fragment() {
             if (isLocationEnabled()) {
                 fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                     if (location == null) {
-                        Log.e(TAG, " Null value: not entered")
                         requestNewLocationData()
                     } else {
-                        Log.i(TAG, location.toString())
-                        weatherViewModel.getWeatherData(location)
-                        weatherViewModel.getCurrentWeatherData(location)
+                        setupObserver(location)
                     }
                 }
             } else {
@@ -131,7 +121,7 @@ class WeatherFragment : Fragment() {
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 requireActivity().startActivity(intent)
             }
-        }else{
+        } else {
             requestPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
         mSwipeRefreshLayout.isRefreshing = false
@@ -146,9 +136,31 @@ class WeatherFragment : Fragment() {
     }
 
 
+    private fun setupObserver(location: Location) {
+        weatherViewModel.getWeatherData(location).observe(viewLifecycleOwner, {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.SUCCESS -> weatherViewModel.settingValuesOnWeatherDataSuccess()
+                    Status.ERROR -> Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG)
+                        .show()
+                }
+
+            }
+        })
+        weatherViewModel.getCurrentWeatherData(location).observe(viewLifecycleOwner, {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.SUCCESS -> weatherViewModel.settingValuesOnCurrentWeatherSuccess()
+                    Status.ERROR -> Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG)
+                        .show()
+                }
+
+            }
+        })
+    }
+
     @SuppressLint("MissingPermission")
     private fun requestNewLocationData() {
-        Log.i(TAG, "Entered requestNewLocationData")
         var locationRequest = LocationRequest.create().apply {
             interval = 4000
             fastestInterval = 2000
@@ -166,15 +178,11 @@ class WeatherFragment : Fragment() {
     private val locationCallback = object : LocationCallback() {
 
         override fun onLocationResult(p0: LocationResult) {
-            Log.i(TAG, "new Location value is : " + p0.lastLocation.toString())
-            var lastLocation = p0.lastLocation
-            weatherViewModel.getWeatherData(lastLocation)
-            weatherViewModel.getCurrentWeatherData(lastLocation)
+            setupObserver(p0.lastLocation)
         }
 
         override fun onLocationAvailability(p0: LocationAvailability) {
             super.onLocationAvailability(p0)
-            Log.e(TAG, "Is Location Available" + p0.isLocationAvailable)
         }
     }
 
@@ -189,7 +197,6 @@ class WeatherFragment : Fragment() {
     }
 
     private fun changeBackground() {
-        Log.i(TAG, weatherViewModel.time.value.toString())
         when {
             weatherViewModel.time.value!! in 13..17 -> {
                 setDrawable(

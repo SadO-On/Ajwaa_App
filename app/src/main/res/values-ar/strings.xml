@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">AJWAA</string>
+    <string name="setting">إعدادات</string>
+    <string name="sun_content_description">شمس</string>
     <string name="days">الأيام</string>
 </resources>

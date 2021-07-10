@@ -21,7 +21,7 @@ interface OpenWeatherApi {
         @Query("appid") apiKey: String,
         @Query("units") type : String,
         @Query("lang") lang : String
-    ): Response<WeatherResponse>
+    ): WeatherResponse
 
    @GET("data/2.5/weather")
    suspend fun getCurrentWeatherData(
@@ -30,7 +30,7 @@ interface OpenWeatherApi {
        @Query("appid") apiKey: String,
        @Query("units") type : String,
        @Query("lang") lang : String
-   ) : Response<CurrentWeatherResponse>
+   ) : CurrentWeatherResponse
 }
 
 private val moshi = Moshi.Builder()
